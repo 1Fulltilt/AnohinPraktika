@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import ru.btpit.nmedia.databinding.ActivityMain2Binding
 import ru.btpit.nmedia.databinding.ActivityMainBinding
+import ru.btpit.nmedia.databinding.CardPostBinding
 
 class MainActivity2 : AppCompatActivity() {
 
@@ -18,7 +19,7 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMain2Binding.inflate(layoutInflater)
         setContentView(binding.root)
-        val post = Post(
+        /*val post = Post(
             1,
             "БТПИТ",
             "В Борисоглебском техникуме промышленных и информационных технологий в преддверии Международного дня родного языка советником директора по воспитанию и по взаимодействию с детскими общественными объединениями Алехиной Светланой Вадимовной совместно с преподавателем литературы Винниченко Виктории Витальевной была организована и проведена акция «Путешествие к Лукоморью». Отрывок из поэмы «Руслан и Людмила» Александра Сергеевича Пушкина «У лукоморья дуб зеленый» на родном языке прочитал студент 1 курса специальности «Технология машиностроения» Ризозода Абдулло Киёмидин. Данная акция способствовала развитию интереса к изучению родного языка, сознательного отношения к нему как явлению культуры; осознанию эстетической ценности родного языка.",
@@ -28,10 +29,25 @@ class MainActivity2 : AppCompatActivity() {
             false,
             false,
         )
-
+*/
         val viewModel: PostViewModel by viewModels()
-        viewModel.data.observe(this) { post ->
-            with(binding) {
+        viewModel.data.observe(this) { posts ->
+            posts.map { post ->
+                CardPostBinding.inflate(layoutInflater, binding.container, false).apply {
+                    textView2.text = post.author
+                    textView5.text = post.content
+                    textView3.text = post.published
+                    textView4.text = post.amountlike.toString()
+                    textView6.text = post.amountrepost.toString()
+
+                }
+
+
+            }
+
+
+
+           /* with(binding) {
                 textView2.text = post.author
                 textView5.text = post.content
 
@@ -39,17 +55,18 @@ class MainActivity2 : AppCompatActivity() {
                 textView6.text = post.amountrepost.toString()
 
                 imageButton2.setBackgroundResource(
-                    if(post.likedByMe) R.drawable.liked
+                    if (post.likedByMe) R.drawable.liked
                     else R.drawable.likes
                 )
                 imageButton2.setOnClickListener {
-                    viewModel.like()
+                    viewModel.like(post.id)
                 }
                 imageButton3.setOnClickListener {
-                    viewModel.repost()
+                    //    viewModel.repost()
                 }
+            }
 
-                }
+             */
 
                 /*var imgbtn = findViewById<ImageButton>(R.id.imageButton2)
              var text2 = findViewById<TextView>(R.id.textView4)
