@@ -8,7 +8,6 @@ interface PostRepository {
     fun like(id : Int)
   //  fun repost()
 }
-
 class PostRepositoryInMemoryImpl : PostRepository {
     private var posts = listOf(
         Post(
@@ -31,10 +30,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             false,
             false,
         ),
-
     )
     private val data = MutableLiveData(posts)
-
     override fun get(): LiveData<List<Post>> = data
     override fun like(id: Int) {
 
@@ -60,7 +57,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
         data.value = post
     }*/
 }
-
 class PostViewModel : ViewModel() {
     private val repository: PostRepository = PostRepositoryInMemoryImpl()
     val data = repository.get()
