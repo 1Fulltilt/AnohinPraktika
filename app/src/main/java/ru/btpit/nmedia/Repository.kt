@@ -1,14 +1,16 @@
 package ru.btpit.nmedia
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+
+
 interface PostRepository {
     fun get(): LiveData<List<Post>>
     fun like(id : Int)
-  //  fun repost()
+    fun removeById(id: Int)
+    fun shareById(id: Int)
 }
-class PostRepositoryInMemoryImpl : PostRepository {
+class PostRepositoryInMemoryImpl() : PostRepository {
     private var posts = listOf(
         Post(
             1,
@@ -31,35 +33,43 @@ class PostRepositoryInMemoryImpl : PostRepository {
             false,
         ),
     )
+
+
     private val data = MutableLiveData(posts)
     override fun get(): LiveData<List<Post>> = data
     override fun like(id: Int) {
-
-        /*if (post.likedByMe)
-            post.amountlike--
-        else
-            post.amountlike++
-
-        post.likedByMe = !post.likedByMe
-        data.value = post
-         */
-         posts = posts.map{
-             if (it.id != id) it else it.copy(likedByMe = !it.likedByMe)
-         }
+        posts = posts.map{
+            if(it.id != id) it else{
+                if (it.likedByMe)
+                    it.amountlike--
+                else
+                    it.amountlike++
+                it.copy(likedByMe = !it.likedByMe)
+            }
+        }
         data.value = posts
     }
-   /* override fun repost(){
-        if (post.repostByMe)
-            post.amountrepost--
-        else
-            post.amountrepost++
-        post.repostByMe = !post.repostByMe
-        data.value = post
-    }*/
+    override fun shareById(id:Int) {
+        posts = posts.map {
+            if(it.id != id)
+                it
+            else
+                it.copy(amountrepost = it.amountrepost + 1)
+        }
+        data.value = posts
+    }
+
+    override fun removeById(id: Int) {
+       posts= posts.filter { it.id != id }
+        data.value = posts
+    }
+
 }
 class PostViewModel : ViewModel() {
     private val repository: PostRepository = PostRepositoryInMemoryImpl()
     val data = repository.get()
     fun like(id: Int) = repository.like(id)
-    //fun repost() = repository.repost()
+    fun removeDyId(id: Int) = repository.removeById(id)
+    fun shareById(id:Int) = repository.shareById(id)
+
 }
