@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageViewmenu"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/priora" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -43,7 +43,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:text="ГБПОУ ВО &quot;БТПИТ&quot;"
+                android:text="Лада Приора &quot;Black_Edition&quot;"
                 tools:ignore="MissingConstraints"
                 tools:layout_editor_absoluteX="72dp"
                 tools:layout_editor_absoluteY="6dp" />
@@ -81,9 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="10dp"
-        android:text="✅ Подать заявление на участие в дистанционном электронном голосовании до 11 марта 2024 года
-✅ Выбрать удобный избирательный участок для голосования и подать заявление до 11 марта 2024 года
-✅ Узнайте о возможностях для избирателей на «Госуслугах»" />
+        android:text="Из ныне выпускаемых моделей Лады наиболее часто подвергается  тюнингу Приора, и АвтоВАЗ не преминул воспользоваться желанием покупателей иметь машины «не как у всех». В прошлом году завод выпустил партию Приор с двуцветной окраской кузова, а теперь к выходу на рынок готовы сразу две специальные версии. В исполнении Black Edition седан окрашен в черный цвет «Пантера», а White Edition — в «Белое облако». Оба колера — из штатной палитры модели, но на спецверсиях такой же цвет у 15-дюймовых легкосплавных колес и молдинга на крышке багажника." />
 
 
 
