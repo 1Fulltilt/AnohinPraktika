@@ -1,86 +1,103 @@
 package ru.btpit.nmedia
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.btpit.nmedia.databinding.CardPostBinding
-import com.google.android.material.snackbar.Snackbar
 
 
-class PostDiffCallback : DiffUtil.ItemCallback<Post>(){
-    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
-        return oldItem.id==newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
-        return  oldItem == newItem
-    }
-
+interface onInteractionListener {
+    fun onLike(post : Post) {}
+    fun onEdit(post : Post) {}
+    fun onRemove(post : Post) {}
+    fun onShare(post:Post) {}
 }
-class PostViewHolder(private val binding: CardPostBinding)
-    :RecyclerView.ViewHolder(binding.root) {
-    fun bind(post: Post, listener: PostAdapter.Listener) {
+class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
+    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+        return oldItem == newItem
+    }
+
+    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
+        return oldItem.id == newItem.id
+    }
+}
+
+class PostViewHolder(
+    private val binding: CardPostBinding,
+    private val onInteractionListener: onInteractionListener
+)  : RecyclerView.ViewHolder(binding.root) {
+    fun bind(post: Post) {
         binding.apply {
-            textViewHeader.text = post.author
+            textViewHeader.text = post.header
             textViewContent.text = post.content
-            textViewDateTime.text = post.published
-            textViewLike.text = post.amountlike.toString()
-            textViewRepost.text = post.amountrepost.toString()
-            imagebutnlike.setImageResource(
-                if (post.likedByMe) R.drawable.liked else R.drawable.likes
+            textViewDateTime.text = post.dataTime
+            textViewLike.text = numberRangeSwitch(post.amountlike)
+            textViewRepost.text = numberRangeSwitch(post.amountrepost)
+            imagebutnlike.setBackgroundResource(
+                if (post.isLike)
+                    R.drawable.liked
+                else
+                    R.drawable.likes
             )
-            imagebutnlike.setOnClickListener {
-                listener.onClickLike(post)
+            imagebutnlike.setOnClickListener{
+                onInteractionListener.onLike(post)
             }
-            imagebutnRepost.setOnClickListener {
-                listener.onClickShare(post)
+            imagebutnRepost.setOnClickListener{
+                onInteractionListener.onShare(post)
             }
-            imageViewmenu.setOnClickListener{
-                listener.onClickMore(post,it,binding)
+            imageViewmenu.setOnClickListener {
+                PopupMenu(it.context, it).apply {
+                    inflate(R.menu.menu_post)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.removes -> {
+                                onInteractionListener.onRemove(post)
+                                true
+                            }
+                            R.id.editing -> {
+                                onInteractionListener.onEdit(post)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                }.show()
             }
         }
     }
 }
 
+class PostsAdapter(
+    private val onInteractionListener: onInteractionListener
+) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
 
-class PostAdapter(
-    private val listener: Listener,
-):ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
-    @SuppressLint("SuspiciousIndentation")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding)
-    }
-    override fun onBindViewHolder(holder: PostViewHolder, position:Int){
-        val post = getItem(position)
-        holder.bind(post, listener)
+        return PostViewHolder(binding,
+            onInteractionListener
+        )
     }
 
-    interface Listener{
-        fun onClickLike(post: Post)
-        fun onClickShare(post: Post)
-        fun onClickMore(post:Post, view: View,binding: CardPostBinding)
-        fun cancelEditPost(post:Post,binding: CardPostBinding)
-        fun saveEditPost(post:Post, binding: CardPostBinding)
-        fun editModeOn(binding: CardPostBinding,content:String)
+    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+        val post = getItem(position)
+        holder.bind(post)
     }
 }
-private fun convertToString(count:Int):String{
-    return when(count){
-        in 0..<1_000 -> count.toString()
-        in 1000..<1_100-> "1K"
-        in 1_100..<10_000 -> ((count/100).toFloat()/10).toString() + "K"
-        in 10_000..<1_000_000 -> (count/1_000).toString() + "K"
-        in 1_000_000..<1_100_000 -> "1M"
-        in 1_100_000..<10_000_000 -> ((count/100_000).toFloat()/10).toString() + "M"
-        in 10_000_000..<1_000_000_000 -> (count/1_000_000).toString() + "M"
-        else -> "ꚙ"
-    }
+
+private fun numberRangeSwitch(value: Int): String { // Switches display based on the size of the number
+    val v1: String = value.toString()
+    return if (value > 999)
+        when(value) {
+            in 1000..1099  -> v1[0].toString() + "K"
+            in 1100 .. 9999 -> v1[0].toString() + "." + v1[1].toString() + "K"
+            in 10000 .. 99999 -> v1[0].toString() + v1[1].toString() + "K"
+            in 100_000 .. 999_999 -> v1[0].toString() + v1[1].toString() + v1[2].toString() + "K"
+            in 1_000_000 .. 999_999_999 -> v1[0].toString() + "." + v1[1].toString() + "M"
+            else -> "ꚙ"
+        } else value.toString()
 }

@@ -1,70 +1,72 @@
 package ru.btpit.nmedia
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.PopupMenu
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import ru.btpit.nmedia.databinding.ActivityMain2Binding
 import ru.btpit.nmedia.databinding.CardPostBinding
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 
 
-class MainActivity2 : AppCompatActivity(),PostAdapter.Listener {
-    val viewModel: PostViewModel by viewModels()
-
+class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMain2Binding.inflate(layoutInflater)
+        val bind: CardPostBinding = CardPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val viewModel: PostViewModel by viewModels()
+        val adapter = PostsAdapter(
+            object : onInteractionListener {
+                override fun onEdit(post: Post) {
+                    viewModel.edit(post)
+                }
 
-        val adapter = PostAdapter (this)
-        binding.listItem.adapter = adapter
-        viewModel.data.observe(this) {Post ->
-            adapter.submitList(Post)
+                override fun onLike(post: Post) {
+                    viewModel.likeById(post.id)
+                }
+
+                override fun onRemove(post: Post) {
+                    viewModel.removeById(post.id)
+                }
+
+                override fun onShare(post: Post) {
+                    viewModel.shareById(post.id)
+                }
+            })
+        binding.listCool.adapter = adapter
+        viewModel.data.observe(this) { posts ->
+            adapter.submitList(posts)
         }
-
-    }
-
-    override fun onClickLike(post: Post) {
-        viewModel.like(post.id)
-    }
-
-    override fun onClickShare(post: Post) {
-        viewModel.shareById(post.id)
-
-    }
-
-    override fun onClickMore(post: Post, view: View, binding: CardPostBinding) {
-        val popupMenu = PopupMenu(this,view)
-        popupMenu.inflate(R.menu.menu_post)
-        popupMenu.setOnMenuItemClickListener {
-            when(it.itemId){
-                R.id.remov -> viewModel.removeDyId(post.id)
+        binding.otpravitbtn.setOnClickListener{
+            with(binding.editContent) {
+                if (text.isNullOrBlank()) {
+                    android.widget.Toast.makeText(
+                        this@MainActivity2,
+                        "Content can't be empty",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                viewModel.changeContent(text.toString())
+                viewModel.save()
+                setText("")
+                clearFocus()
+                AndroidUtils.hideKeyboard(this)
             }
-            true
         }
-        popupMenu.show()
-
-    }
-
-    override fun cancelEditPost(post: Post, binding: CardPostBinding) {
-
-    }
-
-    override fun saveEditPost(post: Post, binding: CardPostBinding) {
-
-    }
-
-    override fun editModeOn(binding: CardPostBinding, content: String) {
-
+        viewModel.edited.observe(this) { post ->
+            if (post.id == 0L) {
+                return@observe
+            }
+            with (binding.editContent) {
+                requestFocus()
+                setText(post.content)
+            }
+        }
     }
 }
-
 
 
 
