@@ -6,6 +6,5 @@
         <item name="slava">@color/black</item>
         <item name="slava">@color/white</item>
     </style>
-
     <style name="Theme.Anohin" parent="Base.Theme.Anohin" />
 </resources>

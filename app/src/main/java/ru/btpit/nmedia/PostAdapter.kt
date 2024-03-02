@@ -32,24 +32,24 @@ class PostViewHolder(
 )  : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         binding.apply {
-            textViewHeader.text = post.header
-            textViewContent.text = post.content
-            textViewDateTime.text = post.dataTime
-            textViewLike.text = numberRangeSwitch(post.amountlike)
-            textViewRepost.text = numberRangeSwitch(post.amountrepost)
-            imagebutnlike.setBackgroundResource(
+            TextViewHeader.text = post.header
+            TextViewContent.text = post.content
+            TextViewDateTime.text = post.dataTime
+            TextViewLike.text = numberRangeSwitch(post.amountlike)
+            TextViewRepost.text = numberRangeSwitch(post.amountrepost)
+            likeButton.setBackgroundResource(
                 if (post.isLike)
                     R.drawable.liked
                 else
                     R.drawable.likes
             )
-            imagebutnlike.setOnClickListener{
+            likeButton.setOnClickListener{
                 onInteractionListener.onLike(post)
             }
-            imagebutnRepost.setOnClickListener{
+            ImageButtonRepost.setOnClickListener{
                 onInteractionListener.onShare(post)
             }
-            imageViewmenu.setOnClickListener {
+            ImageButtonMenu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.menu_post)
                     setOnMenuItemClickListener { item ->
