@@ -62,7 +62,6 @@ class PostViewHolder(
                                 onInteractionListener.onEdit(post)
                                 true
                             }
-
                             else -> false
                         }
                     }
@@ -82,13 +81,11 @@ class PostsAdapter(
             onInteractionListener
         )
     }
-
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = getItem(position)
         holder.bind(post)
     }
 }
-
 private fun numberRangeSwitch(value: Int): String { // Switches display based on the size of the number
     val v1: String = value.toString()
     return if (value > 999)
