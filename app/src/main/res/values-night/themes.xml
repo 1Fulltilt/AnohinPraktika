@@ -4,7 +4,9 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
 
-        <item name="slava">@color/white</item>
-        <item name="slava">@color/black</item>
+        <item name = "slava">
+            @color/white </item>
+        <item name = "slava">
+            @color/black </item>
     </style>
 </resources>

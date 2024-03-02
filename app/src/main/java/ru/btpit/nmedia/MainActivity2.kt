@@ -1,6 +1,7 @@
 package ru.btpit.nmedia
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -32,7 +33,13 @@ class MainActivity2 : AppCompatActivity() {
                 }
 
                 override fun onShare(post: Post) {
-                    viewModel.shareById(post.id)
+                    val intent = Intent().apply{
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT,post.content)
+                        type = "text/plain"
+                    }
+                    val ShareIntent = Intent.createChooser(intent, "Поделиться")
+                    startActivity(ShareIntent)
                 }
             })
         binding.listCool.adapter = adapter

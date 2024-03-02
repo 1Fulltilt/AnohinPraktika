@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageViewmenu"
-            app:srcCompat="@drawable/priora" />
+            app:srcCompat="@drawable/priora"/>
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -69,10 +69,11 @@
             android:layout_height="30dp"
             android:layout_gravity="end"
             android:layout_margin="5dp"
+            android:background="@drawable/tochki"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/tochki" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -95,7 +96,8 @@
             android:layout_width="30dp"
             android:layout_height="25dp"
             android:layout_margin="5dp"
-            android:background="@drawable/likes">
+            android:background="@drawable/likes"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
 
         </ImageButton>
 
@@ -105,12 +107,14 @@
             android:layout_height="18dp"
             android:text="0">
         </TextView>
+
         <ImageButton
             android:id="@+id/imagebutnRepost"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:background="@drawable/repost">
+            android:background="@drawable/repost"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck">
 
         </ImageButton>
 
